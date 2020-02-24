@@ -22,6 +22,8 @@ public class GameDirector : MonoBehaviour
     [Space]
     [SerializeField] private Text scoreText;
     private int score = 0;
+    [SerializeField] private Text targetsCounter;
+    private int targetsCount = 0;
 
     private bool shouldStop = false;
 
@@ -53,6 +55,9 @@ public class GameDirector : MonoBehaviour
     {
         score += number;
         scoreText.text = score.ToString();
+
+        targetsCount--;
+        targetsCounter.text = targetsCount.ToString();
     }
 
     private IEnumerator SpawnTarget()
@@ -61,10 +66,16 @@ public class GameDirector : MonoBehaviour
         {
             yield return new WaitForSecondsRealtime(1f);
 
-            float positionY = Random.Range(downYBorder, upYBorder);
-            float positionX = Random.Range(leftXBorder, rightXBorder);
+            if (targetsCount <= 40)
+            {
+                float positionY = Random.Range(downYBorder, upYBorder);
+                float positionX = Random.Range(leftXBorder, rightXBorder);
 
-            Instantiate(targetPrefab, new Vector3(positionX, positionY, 0f), transform.rotation);
+                Instantiate(targetPrefab, new Vector3(positionX, positionY, 0f), transform.rotation);
+
+                targetsCount++;
+                targetsCounter.text = targetsCount.ToString();
+            }
         }
     }
 }
